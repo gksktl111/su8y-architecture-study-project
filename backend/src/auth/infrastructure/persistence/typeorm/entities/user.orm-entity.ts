@@ -1,14 +1,14 @@
 import {Column, Entity, PrimaryGeneratedColumn, Unique} from 'typeorm';
 
-@Entity()
+@Entity('users')
 @Unique(['username'])
-export class User {
+export class UserOrmEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    username: string;
+    username!: string;
 
     @Column()
-    password: string;
+    password!: string;
 }

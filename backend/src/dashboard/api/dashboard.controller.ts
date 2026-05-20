@@ -1,6 +1,6 @@
 import {Controller, Get, UseGuards} from '@nestjs/common';
 import {DashboardService} from '../application/dashboard.service';
-import {AuthGuard} from '../../auth/application/auth.guard';
+import {AuthGuard} from '../../auth/presentation/guards/auth.guard';
 import {DashboardData} from '../domain/rppg.type';
 
 @Controller('api/sessions')
