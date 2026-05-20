@@ -1,4 +1,4 @@
-import {Inject, Injectable, UnauthorizedException} from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import {
     ACCESS_TOKEN_ISSUER,
 } from '../ports/access-token-issuer.port';
@@ -7,6 +7,7 @@ import {USER_REPOSITORY} from '../../domain/repositories/user.repository';
 import type {AccessTokenIssuerPort} from '../ports/access-token-issuer.port';
 import type {PasswordHasherPort} from '../ports/password-hasher.port';
 import type {UserRepository} from '../../domain/repositories/user.repository';
+import {InvalidCredentialsError} from '../errors/invalid-credentials.error';
 
 export interface SignInCommand {
     username: string;
@@ -34,7 +35,7 @@ export class SignInUseCase {
         const user = await this.userRepository.findByUsername(username);
 
         if (!user) {
-            throw new UnauthorizedException('Please check your login credentials');
+            throw new InvalidCredentialsError();
         }
 
         const isPasswordMatched = await this.passwordHasher.compare(
@@ -43,7 +44,7 @@ export class SignInUseCase {
         );
 
         if (!isPasswordMatched) {
-            throw new UnauthorizedException('Please check your login credentials');
+            throw new InvalidCredentialsError();
         }
 
         return {

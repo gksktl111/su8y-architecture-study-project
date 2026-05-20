@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  UseFilters,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -18,8 +19,10 @@ import { CheckUsernameParams } from './dto/check-username.params';
 import { SignUpResponse } from './dto/sign-up.response';
 import { SignInResponse } from './dto/sign-in.response';
 import { CheckUsernameResponse } from './dto/check-username.response';
+import { AuthExceptionFilter } from '../filters/auth-exception.filter';
 
 @Controller('auth')
+@UseFilters(AuthExceptionFilter)
 export class AuthController {
   constructor(
     private readonly signUpUseCase: SignUpUseCase,
@@ -47,6 +50,7 @@ export class AuthController {
   async checkUsername(
     @Param() params: CheckUsernameParams,
   ): Promise<CheckUsernameResponse> {
-    return this.checkUsernameUseCase.execute(params);
+    await this.checkUsernameUseCase.execute(params);
+    return { message: 'Successfully check username' };
   }
 }

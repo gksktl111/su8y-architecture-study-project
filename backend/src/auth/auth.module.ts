@@ -14,7 +14,8 @@ import { PASSWORD_HASHER } from './application/ports/password-hasher.port';
 import { BcryptPasswordHasher } from './infrastructure/security/bcrypt-password-hasher';
 import { ACCESS_TOKEN_ISSUER } from './application/ports/access-token-issuer.port';
 import { JwtTokenIssuer } from './infrastructure/security/jwt-token-issuer';
-import { AuthGuard } from './presentation/guards/auth.guard';
+import { JWTAuthGuard } from './presentation/guards/jwtAuth.guard';
+import { AuthExceptionFilter } from './presentation/filters/auth-exception.filter';
 
 @Module({
   imports: [
@@ -35,9 +36,10 @@ import { AuthGuard } from './presentation/guards/auth.guard';
     SignUpUseCase,
     SignInUseCase,
     CheckUsernameUseCase,
-    AuthGuard,
+    JWTAuthGuard,
+    AuthExceptionFilter,
     JwtStrategy,
   ],
-  exports: [AuthGuard, JwtStrategy],
+  exports: [JWTAuthGuard],
 })
 export class AuthModule {}

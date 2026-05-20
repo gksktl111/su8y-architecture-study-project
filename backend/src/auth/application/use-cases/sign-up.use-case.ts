@@ -1,9 +1,10 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PASSWORD_HASHER } from '../ports/password-hasher.port';
 import { USER_REPOSITORY } from '../../domain/repositories/user.repository';
 import { User } from '../../domain/entities/user';
 import type { PasswordHasherPort } from '../ports/password-hasher.port';
 import type { UserRepository } from '../../domain/repositories/user.repository';
+import { UserAlreadyExistsError } from '../errors/user-already-exists.error';
 
 export interface SignUpCommand {
   username: string;
@@ -29,7 +30,7 @@ export class SignUpUseCase {
     const existingUser = await this.userRepository.findByUsername(username);
 
     if (existingUser) {
-      throw new ConflictException('Username already exists');
+      throw new UserAlreadyExistsError('Username already exists');
     }
 
     const hashedPassword = await this.passwordHasher.hash(password);
@@ -37,8 +38,12 @@ export class SignUpUseCase {
       User.create(username, hashedPassword),
     );
 
+    if (savedUser.id === undefined) {
+      throw new Error('Saved user must include an id');
+    }
+
     return {
-      id: savedUser.id as number,
+      id: savedUser.id,
       username: savedUser.username,
     };
   }
