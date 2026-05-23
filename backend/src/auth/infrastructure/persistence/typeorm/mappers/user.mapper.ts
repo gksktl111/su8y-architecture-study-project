@@ -14,7 +14,7 @@ export class UserMapper {
       entity.id = user.id;
     }
     entity.username = user.username;
-    entity.password = user.password;
+    entity.password = user.hashedPassword;
     return entity;
   }
 }

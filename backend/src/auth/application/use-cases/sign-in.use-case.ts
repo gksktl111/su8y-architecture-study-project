@@ -37,7 +37,7 @@ export class SignInUseCase {
 
     const isPasswordMatched = await this.passwordHasher.compare(
       password,
-      user.password,
+      user.hashedPassword,
     );
 
     if (!isPasswordMatched) {
