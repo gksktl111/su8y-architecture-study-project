@@ -9,7 +9,6 @@ import { USER_REPOSITORY } from './domain/repositories/user.repository';
 import { JwtStrategy } from './infrastructure/security/jwt.strategy';
 import { SignUpUseCase } from './application/use-cases/sign-up.use-case';
 import { SignInUseCase } from './application/use-cases/sign-in.use-case';
-import { CheckUsernameUseCase } from './application/use-cases/check-username.use-case';
 import { PASSWORD_HASHER } from './application/ports/password-hasher.port';
 import { BcryptPasswordHasher } from './infrastructure/security/bcrypt-password-hasher';
 import { ACCESS_TOKEN_ISSUER } from './application/ports/access-token-issuer.port';
@@ -30,12 +29,16 @@ import { AuthExceptionFilter } from './presentation/filters/auth-exception.filte
   ],
   controllers: [AuthController],
   providers: [
+    // Infrastructure adapters (port implementations)
     { provide: USER_REPOSITORY, useClass: TypeormUserRepository },
     { provide: PASSWORD_HASHER, useClass: BcryptPasswordHasher },
     { provide: ACCESS_TOKEN_ISSUER, useClass: JwtTokenIssuer },
+
+    // Application use cases
     SignUpUseCase,
     SignInUseCase,
-    CheckUsernameUseCase,
+
+    // Presentation providers
     JWTAuthGuard,
     AuthExceptionFilter,
     JwtStrategy,
